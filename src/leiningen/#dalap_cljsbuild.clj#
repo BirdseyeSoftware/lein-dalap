@@ -37,12 +37,11 @@
                                                    -mzero-transform-rule)]
           (let [options (-normalize-input-path-dalap-options
                          options-or-path)
-                output-path (:output options)
                 path-specific-transform-rules (get options
                                                    :transform-rules
                                                    -mzero-transform-rule)]
             ;; { input-path => transform-rules }
-            { [input-path output-path]
+            { input-path
              (-mappend-transform-rules cljs-default-transform-rules
                                        cljsbuild-transform-rules
                                        top-level-transform-rules
@@ -74,7 +73,7 @@
             (spit output-path
                   (transform-to-cljs-file input-path
                                           (get user-transform-rules
-                                               [input-path output-path]))))))))
+                                               input-path))))))))
   (run-compiler-fn project opts build-ids watch?))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

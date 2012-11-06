@@ -25,8 +25,8 @@
       {:transform-rules ['java.lang.Object 'MyObject]
        :paths {"a" "b"}}}
      ;; output
-     {"a" (vec (concat ['java.lang.Object 'MyObject]
-                       cljs-default-transform-rules))}))
+     {["a" "b"] (concat ['java.lang.Object 'MyObject]
+                  cljs-default-transform-rules)}))
 
   (testing "concats input-path-level transform rules vector with default ones"
     (assert-transform-rules
@@ -35,8 +35,8 @@
       {:paths {"a" {:output "b"
                     :transform-rules ['java.lang.Object 'MyObject]}}}}
      ;; output
-     {"a" (vec (concat ['java.lang.Object 'MyObject]
-                       cljs-default-transform-rules))}))
+     {["a" "b"] (concat ['java.lang.Object 'MyObject]
+                  cljs-default-transform-rules)}))
 
   (testing "concats different transform rules vectors giving
             preference to input-path level ones"
@@ -47,7 +47,7 @@
        :paths {"a" {:output "b"
                     :transform-rules ['Object 'InputPathLevel]}}}}
      ;; output
-     {"a" (concat ['Object 'InputPathLevel]
+     {["a" "b"] (concat ['Object 'InputPathLevel]
                   ['Object 'TopLevel]
                   cljs-default-transform-rules)}))
 
@@ -69,7 +69,7 @@
          )
        :paths {"a" "b"}}}
      ;; output
-     {"a" []}
+     {["a" "b"] []}
      ;; ^ the transform rules from the path are going to be
      ;; the ones returned by the top level transform-rules function
      ))
@@ -98,6 +98,6 @@
            (is (= transform-rules-from-top-level []))
            ['Object 'InnerObject])}}}}
      ;; output
-     {"a" ['Object 'InnerObject]})))
+     {["a" "b"] ['Object 'InnerObject]})))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

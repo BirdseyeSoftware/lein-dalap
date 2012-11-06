@@ -1,10 +1,10 @@
-(ns cljsbuild-dalap.transform
+(ns dalap-cljsbuild.transform
   (:require [clojure.string :as str]
             [dalap.walk]
             [dalap.selector]
             [cljsbuild-dalap.transform-rules :refer
-             [cljs-default-transform-rules]])
-
+             [cljs-default-transform-rules
+              -mappend-transform-rules]])
   (:import [clojure.lang LineNumberingPushbackReader]))
 
 (defn visit-clj-form [form w]
@@ -53,21 +53,15 @@
      (str/replace (slurp input) #"\#_\(\s*:cljs\b" "(do ")))))
 
 (defn cljs-generated-file-notice [clj-file-path]
-  (str ";; This file was generated from \n;;\n;; " clj-file-path
-       " @ " (java.util.Date.)
+  (str ";; This file was generated with dalap-cljsbuild from\n;;\n;; "
+       clj-file-path " @ " (java.util.Date.)
        "\n;;\n"))
 
 (defn transform-to-cljs-file
-  ([input]
-     (transform-to-cljs-file input cljs-default-transform-rules))
-  ([input transform-rules]
-     (let [;;input-file (as-file input)
-           ;;path (.getPath f)
-           ;; rules (if (or (fn? transform-rules)
-           ;;               (map? transform-rules))
-           ;;         (transform-rules path)
-           ;;         transform-rules)
-           cljs-forms (clj-forms-to-cljs-forms
-                         (read-clj-forms-from-input input) transform-rules)]
-       (str (cljs-generated-file-notice input)
-            (str/join "\n" cljs-forms)))))
+  [input-path transform-rules]
+  (let [cljs-forms (clj-forms-to-cljs-forms
+                    (read-clj-forms-from-input input-path)
+                    (-mappend-transform-rules cljs-default-transform-rules
+                                              transform-rules))]
+    (str (cljs-generated-file-notice input-path)
+         (str/join "\n" cljs-forms))))

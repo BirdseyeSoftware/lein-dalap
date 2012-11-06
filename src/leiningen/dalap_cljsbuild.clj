@@ -1,4 +1,4 @@
-(ns leiningen.cljsbuild-dalap
+(ns leiningen.dalap-cljsbuild
   (:require [cljsbuild-dalap
              [transform :refer [transform-to-cljs-file]]
              [transform-rules :refer
