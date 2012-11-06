@@ -6,4 +6,5 @@
   :dependencies [[org.clojure/tools.namespace "0.2.1"]
                  [lein-cljsbuild "0.2.9"]
                  [dalap "0.0.1-SNAPSHOT"]]
+  :plugins [[lein-swank "1.4.4"]]
   :eval-in-leiningen true)
