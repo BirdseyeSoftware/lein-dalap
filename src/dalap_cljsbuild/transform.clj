@@ -2,14 +2,14 @@
   (:require [clojure.string :as str]
             [dalap.walk]
             [dalap.selector]
-            [cljsbuild-dalap.transform-rules :refer
+            [dalap-cljsbuild.transform-rules :refer
              [cljs-default-transform-rules
               -mappend-transform-rules]])
   (:import [clojure.lang LineNumberingPushbackReader]))
 
 (defn visit-clj-form [form w]
   ;; a modified version of clojure.walk with the ability to drop forms
-  (letfn [(filter-map [f form] (remove #(= % ::drop) (map f form)))]
+  (letfn [(filter-map [f form] (remove #(= % :dalap/drop-form) (map f form)))]
     (cond
       (list? form) (apply list (filter-map w form))
       (instance? clojure.lang.IMapEntry form) (vec (filter-map w form))
@@ -59,9 +59,8 @@
 
 (defn transform-to-cljs-file
   [input-path transform-rules]
-  (let [cljs-forms (clj-forms-to-cljs-forms
-                    (read-clj-forms-from-input input-path)
-                    (-mappend-transform-rules cljs-default-transform-rules
-                                              transform-rules))]
-    (str (cljs-generated-file-notice input-path)
-         (str/join "\n" cljs-forms))))
+  (str (cljs-generated-file-notice input-path)
+       (str/join "\n" (clj-forms-to-cljs-forms
+                       (read-clj-forms-from-input input-path)
+                       (-mappend-transform-rules cljs-default-transform-rules
+                                                 transform-rules)))))

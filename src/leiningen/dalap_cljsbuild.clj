@@ -1,5 +1,5 @@
 (ns leiningen.dalap-cljsbuild
-  (:require [cljsbuild-dalap
+  (:require [dalap-cljsbuild
              [transform :refer [transform-to-cljs-file]]
              [transform-rules :refer
               [-mzero-transform-rule
@@ -57,8 +57,8 @@
    {:keys [builds] :as opts}
    build-ids watch?]
   (let [cljsbuild-transform-rules (get-in project
-                                        [:cljsbuild :dalap :transform-rules]
-                                        -mzero-transform-rule)]
+                                          [:cljsbuild :dalap :transform-rules]
+                                          -mzero-transform-rule)]
     ;;
     (doseq [build builds]
       (let [user-transform-rules (-parse-user-transform-rules
@@ -69,8 +69,8 @@
         (doseq [[input-path output-path] paths-to-transform]
           (let [output-path (-get-output-path output-path)]
             (println
-              (str "[build: " (:id build) "]")
-              "transforming" input-path "to" output-path)
+             (str "[build: " (:id build) "]")
+             "transforming" input-path "to" output-path)
             (spit output-path
                   (transform-to-cljs-file input-path
                                           (get user-transform-rules

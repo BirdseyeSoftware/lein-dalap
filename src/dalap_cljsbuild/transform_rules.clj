@@ -7,15 +7,20 @@
   [;;
    ;; replace forms with the one specified in the ^{:cljs}
    (fn [form w] (contains? (meta form) :cljs))
-   (fn [form w_] ((comp :cljs meta) form))
+   (fn [form w_]
+     (let [replacement ((comp :cljs meta) form)]
+       (if (and (seq? replacement)
+                (= (first replacement) 'quote))
+         (second replacement)
+         replacement)))
    ;;
    ;; drop all forms tagged with ^{:clj} (clojure only)
    (fn [form w] (contains? (meta form) :clj))
-   (constantly ::drop)
+   (constantly :dalap/drop-form)
    ;;
    ;; drop forms that only work on clojure (macro & comments)
    (fn [form w] (and (list? form) (clj-forms-to-drop (first form))))
-   (constantly ::drop)
+   (constantly :dalap/drop-form)
   ])
 
 (defonce ^:private cljs-java-non-prefix-types-transform-rules
@@ -37,6 +42,7 @@
 
 (defonce ^:private cljs-clj-non-prefix-types-transform-rules
   ['Atom 'cljs.core.Atom
+   'Named 'cljs.core.Named
    'PersistentVector 'cljs.core.PersistentVector
   ])
 
