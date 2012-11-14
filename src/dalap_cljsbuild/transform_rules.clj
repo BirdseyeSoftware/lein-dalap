@@ -1,4 +1,5 @@
-(ns dalap-cljsbuild.transform-rules)
+(ns dalap-cljsbuild.transform-rules
+  (:require [dalap.rules]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -6,22 +7,22 @@
 (defonce ^:private cljs-core-transform-rules
   [;;
    ;; replace forms with the one specified in the ^{:cljs}
-   (fn [form w] (contains? (meta form) :cljs))
-   (fn [form w_]
-     (let [replacement ((comp :cljs meta) form)]
-       (if (and (seq? replacement)
-                (= (first replacement) 'quote))
-         (second replacement)
-         replacement)))
+   (dalap.rules/when (fn [form] (contains? (meta form) :cljs)))
+   (dalap.rules/transform
+    (fn [form w_]
+      (let [replacement ((comp :cljs meta) form)]
+        (if (and (seq? replacement)
+                 (= (first replacement) 'quote))
+          (second replacement)
+          replacement))))
    ;;
    ;; drop all forms tagged with ^{:clj} (clojure only)
-   (fn [form w] (contains? (meta form) :clj))
-   (constantly :dalap/drop-form)
+   (dalap.rules/when (fn [form] (contains? (meta form) :clj)))
+   (dalap.rules/transform (constantly :dalap/drop-form))
    ;;
    ;; drop forms that only work on clojure (macro & comments)
-   (fn [form w] (and (list? form) (clj-forms-to-drop (first form))))
-   (constantly :dalap/drop-form)
-  ])
+   (dalap.rules/when (fn [form] (and (list? form) (clj-forms-to-drop (first form)))))
+   (dalap.rules/transform (constantly :dalap/drop-form))])
 
 (defonce ^:private cljs-java-non-prefix-types-transform-rules
   ['Object 'default

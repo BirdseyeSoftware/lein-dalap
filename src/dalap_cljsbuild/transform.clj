@@ -1,7 +1,7 @@
 (ns dalap-cljsbuild.transform
   (:require [clojure.string :as str]
             [dalap.walk]
-            [dalap.selector]
+            [dalap.rules]
             [dalap-cljsbuild.transform-rules :refer
              [cljs-default-transform-rules
               -mappend-transform-rules]])
@@ -22,7 +22,7 @@
      (clj-forms-to-cljs-forms forms cljs-default-transform-rules))
   ([forms rules]
      (dalap.walk/walk forms
-                      ((dalap.selector/-gen-decorator rules) visit-clj-form))))
+                      ((dalap.rules/-gen-rules-decorator rules) visit-clj-form))))
 
 (defn read-forms-from-file
   ;; stolen from:
