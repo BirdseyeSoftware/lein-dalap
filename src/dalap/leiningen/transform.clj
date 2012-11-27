@@ -1,15 +1,15 @@
-(ns dalap-cljsbuild.transform
+(ns dalap.leiningen.transform
   (:require [clojure.string :as str]
             [dalap.walk]
             [dalap.rules]
-            [dalap-cljsbuild.transform-rules :refer
-             [cljs-default-transform-rules
-              -mappend-transform-rules]])
+            [dalap.leiningen.rules :refer
+             [cljs-default-rules -mappend]])
   (:import [clojure.lang LineNumberingPushbackReader]))
 
 (defn visit-clj-form [form w]
-  ;; a modified version of clojure.walk with the ability to drop forms
-  (letfn [(filter-map [f form] (remove #(= % :dalap/drop-form) (map f form)))]
+  "A modified version of clojure.walk with the ability to drop forms"
+  (letfn [(filter-map [f form] (remove #(= % :dalap/drop-form)
+                                       (map f form)))]
     (cond
       (list? form) (apply list (filter-map w form))
       (instance? clojure.lang.IMapEntry form) (vec (filter-map w form))
@@ -18,8 +18,9 @@
       :else form)))
 
 (defn clj-forms-to-cljs-forms
+  "Transform a seq of clojure forms into clojurescript forms"
   ([forms]
-     (clj-forms-to-cljs-forms forms cljs-default-transform-rules))
+     (clj-forms-to-cljs-forms forms cljs-default-rules))
   ([forms rules]
      (dalap.walk/walk forms
                       ((dalap.rules/-gen-rules-decorator rules) visit-clj-form))))
@@ -58,9 +59,9 @@
        "\n;;\n"))
 
 (defn transform-to-cljs-file
-  [input-path transform-rules]
-  (str (cljs-generated-file-notice input-path)
+  [clj-file-path rules]
+  (str (cljs-generated-file-notice clj-file-path)
        (str/join "\n" (clj-forms-to-cljs-forms
-                       (read-clj-forms-from-input input-path)
-                       (-mappend-transform-rules cljs-default-transform-rules
-                                                 transform-rules)))))
+                       (read-clj-forms-from-input clj-file-path)
+                       (-mappend cljs-default-rules
+                                 rules)))))
