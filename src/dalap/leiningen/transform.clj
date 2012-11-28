@@ -54,7 +54,7 @@
      (str/replace (slurp input) #"\#_\(\s*:cljs\b" "(do ")))))
 
 (defn cljs-generated-file-notice [clj-file-path]
-  (str ";; This file was generated with dalap-cljsbuild from\n;;\n;; "
+  (str ";; This file was generated with lein-dalap from\n;;\n;; "
        clj-file-path " @ " (java.util.Date.)
        "\n;;\n"))
 
