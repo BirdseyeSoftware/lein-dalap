@@ -95,7 +95,7 @@
        (and (fn? tr1) (sequential? tr2))  (tr1 tr2)
        :else
        (throw (Exception.
-               (str "-mappend-rules invalid argument types"
+               (str "-mappend invalid argument types"
                     (type tr1) " => " (str tr1) "\n"
                     (type tr2) " => " (str tr2))))))
   ([tr1 tr2 & rest]
