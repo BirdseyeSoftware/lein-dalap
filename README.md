@@ -26,11 +26,11 @@ In order to transform files from clojure to clojurescript you will need a `<proj
   [
     'Object 'default
     ;; ^ you may use symbols as selectors and transformers
-    ;; this will replace an `Object' symbol, `default' symbol in your
+    ;; this will replace an `Object' symbol with `default' symbol in your
     ;; final cljs source code
 
     (when (has-meta? :cljs)) (transform (replace-with-meta :cljs))
-    ;; ^ you may also use functions as selectors as transformers
+    ;; ^ you may also use functions as selectors and transformers
     ;; as long as you wrap them with the `when' and `transform' functions.
     ;; This specific selector will replace your source code like:
     ;;
@@ -105,8 +105,9 @@ In order to transform files from clojure to clojurescript you will need a `<proj
 
 ### Plugin execution
 
-The plugin works the same way as [lein-cljsbuild](), you will have
-three sub-commands you can excute:
+The plugin works the same way as
+[lein-cljsbuild](https://github.com/emezeske/lein-cljsbuild), you will
+have three sub-commands you can excute:
 
 * auto: To automatically compile files (specified on dalap_rules.clj)
   that has been modified
