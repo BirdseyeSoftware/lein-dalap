@@ -9,7 +9,7 @@
       (-> project
           (update-in [:dependencies]
                  conj
-                 ['lein-dalap-cljsbuild "0.1.0-SNAPSHOT"])
+                 ['lein-dalap "0.1.0-SNAPSHOT"])
           (assoc :eval-in :classloader))
       ;; body
       `(eval (read-string (slurp ~path)))
