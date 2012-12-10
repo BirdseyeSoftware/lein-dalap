@@ -43,7 +43,7 @@
    (dalap.rules/transform drop-form)
    ])
 
-(defonce cljs-java-non-prefix-types-rules
+(defonce -cljs-java-non-prefix-types-rules
   ['Object 'default
    'String 'string
    'Long 'number
@@ -54,23 +54,61 @@
    'Exception 'js/Error
   ])
 
+(defonce cljs-java-non-prefix-types-rules
+  (mapcat
+   (fn [[k _]]
+     [k
+      (dalap.rules/transform
+       (fn [form w]
+         (println
+          (str (:log-prefix w)
+               "WARNING: Found possible Java class `"
+               form
+               "'. Leaving it as is.\n"
+               "         You'll need to add the package name to `"
+               form
+               "' for automatic translation to Javascript.\n"
+               "         (e.g java.lang." form ")"))
+         (println "")
+         form))])
+   (partition 2 -cljs-java-non-prefix-types-rules)))
+
 (defonce cljs-java-prefix-types-rules
   (mapcat
    (fn [[k v]]
      [(symbol (format "java.lang.%s" (name k))) v])
-   (partition 2 cljs-java-non-prefix-types-rules)))
+   (partition 2 -cljs-java-non-prefix-types-rules)))
 
-(defonce cljs-clj-non-prefix-types-rules
+(defonce -cljs-clj-non-prefix-types-rules
   ['Atom 'cljs.core.Atom
    'Named 'cljs.core.Named
    'PersistentVector 'cljs.core.PersistentVector
   ])
 
+(defonce cljs-clj-non-prefix-types-rules
+  (mapcat
+   (fn [[k _]]
+     [k
+      (dalap.rules/transform
+       (fn [form w]
+         (println
+          (str (:log-prefix w)
+               "WARNING: Found possible Clojure type `"
+               form
+               "'. Leaving it as is.\n"
+               "         You'll need to add the package prefix for `"
+               form
+               "' for automatic translation to Clojurescript.\n"
+               "         (e.g clojure.lang." form ")"))
+         (println "")
+         form))])
+   (partition 2 -cljs-clj-non-prefix-types-rules)))
+
 (defonce cljs-clj-prefix-types-rules
   (mapcat
    (fn [[k v]]
      [(symbol (format "clojure.lang.%s" (name k))) v])
-   (partition 2 cljs-clj-non-prefix-types-rules)))
+   (partition 2 -cljs-clj-non-prefix-types-rules)))
 
 (defonce cljs-default-rules
   (concat cljs-core-rules

@@ -39,8 +39,10 @@
      (if (fs/directory? output-path)
        (fs/mkdirs output-path)
        (fs/mkdirs (fs/parent output-path)))
-     (println (str "[build: " (or build-id "none") "]")
-              "Transforming" input-path "to" output-path)
+     ;; (println (str "[build: " (or build-id "none") "]")
+     ;;          "Transforming" input-path "to" output-path)
+     (println "")
+     (println "dalap transforming" input-path "=>" output-path)
      (spit output-path
            (transform-to-cljs-file input-path
                                    rules))))
