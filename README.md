@@ -120,6 +120,10 @@ If you add `:hooks [leiningen.dalap]` in your `project.clj` file
 the transformation of clj to cljs files will be executed automatically
 before cljsbuild compilation.
 
+## Continuous Integration Status
+
+[![Build Status](https://secure.travis-ci.org/BirdseyeSoftware/lein-dalap.png?branch=master)](https://travis-ci.org/BirdseyeSoftware/lein-dalap)
+
 ## License
 
 Copyright © 2012 Birdseye Software.
