@@ -12,7 +12,7 @@
       (-> project
           (update-in [:dependencies]
                      conj
-                     ['lein-dalap "0.1.0-SNAPSHOT"])
+                     ['com.birdseye-sw/lein-dalap "0.1.0"])
           (assoc :eval-in :classloader))
       ;; body
       `(eval (read-string (slurp ~path)))

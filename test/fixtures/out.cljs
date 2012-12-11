@@ -1,6 +1,6 @@
 ;; This file was generated with lein-dalap from
 ;;
-;; test/fixtures/file.clj @ Mon Dec 10 23:14:41 UTC 2012
+;; test/fixtures/file.clj @ Tue Dec 11 18:53:37 UTC 2012
 ;;
 (ns fixtures.file (:require [clojure.test :refer [deftest is]]) (:import [clojure.lang PersistentVector IFn]))
 (defprotocol CustomProtocol (my-fn [this]))
