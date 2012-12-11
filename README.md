@@ -5,7 +5,7 @@ clojurescript.
 
 ## Usage
 
-Put `[lein-dalap "0.1.0-SNAPSHOT"]` into the `:plugins` vector of your
+Put `[com.birdseye-sw/lein-dalap "0.1.0"]` into the `:plugins` vector of your
 project.clj.
 
 ### Transformation rules
@@ -128,4 +128,4 @@ before cljsbuild compilation.
 
 Copyright © 2012 Birdseye Software.
 
-Distributed under the Eclipse Public License, the same as Clojure.
+Distributed under the MIT License.
