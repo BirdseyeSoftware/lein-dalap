@@ -1,13 +1,26 @@
 # hello_world
 
-A Clojure library designed to ... well, that part is up to you.
+Simple hello world application to test lein-dalap
 
-## Usage
+## Installation & Execution
 
-FIXME
+You will need to execute in the root of the project (lein-dalap/examples/hello_world/):
+
+```bash
+$> lein dalap once
+```
+
+This command prints which files has been transformed from clojure to clojurescript
+
+## Important take aways
+
+You need:
+
+* A `dalap_rules.clj` file in the root of the project with the files and
+  transformation rules
 
 ## License
 
-Copyright © 2012 FIXME
+Copyright © 2012 Birdseye Software.
 
-Distributed under the Eclipse Public License, the same as Clojure.
+Distributed under the MIT License.
