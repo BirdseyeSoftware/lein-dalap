@@ -35,7 +35,6 @@ example of the rules format:
     ;; ^ you may also use functions as selectors and transformers
     ;; Wrap selector functions in `dalap/when' and transformer
     ;; functions in `dalap/transform'.
-    ;; This specific selector will replace your source code like:
     ;;
     ;; from clojure:
     ;; (^{:cljs '-invoke} invoke [args] ...)
