@@ -3,6 +3,17 @@
 A Leiningen plugin to transform clojure source code into
 clojurescript.
 
+lein-dalap allows you to author code that works in both the JVM and in
+the browser, without forking your code and without relying on
+cljsbuild crossovers.
+
+lein-dalap is inspired by [cljx](https://github.com/lynaghk/cljx), a
+leiningen plugin that transforms input source files with a .cljx
+extension and special meta-data markup into .clj and .cljs output. In
+contrast with cljx, lein-dalap's input files are plain .clj files and
+only the .cljs files are auto-generated. It is also simpler to specify
+custom transformation rules at the project level.
+
 ## Usage
 
 Put `[com.birdseye-sw/lein-dalap "0.1.0"]` into the `:plugins` vector of your
