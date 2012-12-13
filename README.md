@@ -14,26 +14,24 @@ Please refer to our [documentation site][documentation_site].
 
 ### Transformation rules
 
-In order to transform files from clojure to clojurescript you will need a `<project-root>/dalap_rules.clj' file. The format is the following:
+In order to transform files from clojure to clojurescript you will
+need a `<project-root>/dalap_rules.clj' file. The following is an
+example of the rules format:
 
 ```clojure
-;; The file is going to be composed of tuples of file-specs
-;; (input-paths, output-paths tuples) and transformation rules
-;; (selector, transfomer tuples)
-
 {
-  ["src/clj/foo.clj" "src/cljs/foo.cljs"]
-  ;; ^ input file ^ generated output file
-
-  ;; following are the transformation rules for this
-  ;; file-spec
+  ;; each entry is a tuple of [input file, output file] ...
+  ["src/clj/foo.clj" "src/cljs/foo.cljs"] 
+  ;; ... followed by the transformation rules to use. 
+  ;; Rules are pairs of selector + transformer
   [
-    'Object 'default
+    'java.lang.Object 
+    'default
     ;; ^ you may use symbols as selectors and transformers
-    ;; this will replace an `Object' symbol with `default' symbol in your
-    ;; final cljs source code
+    ;; this will replace `java.lang.Object' with `default' symbol in your
+    ;; final cljs source code.
 
-    (when (has-meta? :cljs)) (transform (replace-with-meta :cljs))
+    (dalap/when (has-meta? :cljs)) (dalap/transform (replace-with-meta :cljs))
     ;; ^ you may also use functions as selectors and transformers
     ;; as long as you wrap them with the `when' and `transform' functions.
     ;; This specific selector will replace your source code like:
@@ -43,8 +41,6 @@ In order to transform files from clojure to clojurescript you will need a `<proj
     ;; To clojurescript:
     ;; (-invoke [args] ...)
     ;;
-    ;; We use valid clojure syntax to annotate how we want
-    ;; the clojurescript output to be.
   ]
 }
 ```
@@ -92,9 +88,9 @@ In order to transform files from clojure to clojurescript you will need a `<proj
 
   ```clojure
   (extend-protocol IProtocol
-    Object
+    java.lang.Object
     (my-fn [obj] ...))
-    String
+    java.lang.String
     (my-fn [str] ...))
 
   ;; this will be translated to:
@@ -121,10 +117,6 @@ have three sub-commands you can excute:
 If you add `:hooks [leiningen.dalap]` in your `project.clj` file
 the transformation of clj to cljs files will be executed automatically
 before cljsbuild compilation.
-
-## Continuous Integration Status
-
-[![Build Status](https://secure.travis-ci.org/BirdseyeSoftware/lein-dalap.png?branch=master)](https://travis-ci.org/BirdseyeSoftware/lein-dalap)
 
 ## License
 
