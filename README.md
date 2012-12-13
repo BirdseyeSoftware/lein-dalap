@@ -28,12 +28,13 @@ example of the rules format:
     'java.lang.Object 
     'default
     ;; ^ you may use symbols as selectors and transformers
-    ;; this will replace `java.lang.Object' with `default' symbol in your
+    ;; this will replace `java.lang.Object' with `default' in your
     ;; final cljs source code.
 
     (dalap/when (has-meta? :cljs)) (dalap/transform (replace-with-meta :cljs))
     ;; ^ you may also use functions as selectors and transformers
-    ;; as long as you wrap them with the `when' and `transform' functions.
+    ;; Wrap selector functions in `dalap/when' and transformer
+    ;; functions in `dalap/transform'.
     ;; This specific selector will replace your source code like:
     ;;
     ;; from clojure:
