@@ -1,4 +1,4 @@
-# lein-dalap
+# lein-dalap [![Build Status](https://secure.travis-ci.org/BirdseyeSoftware/lein-dalap.png?branch=master)](https://travis-ci.org/BirdseyeSoftware/lein-dalap)
 
 A Leiningen plugin to transform clojure source code into
 clojurescript.
@@ -7,6 +7,10 @@ clojurescript.
 
 Put `[com.birdseye-sw/lein-dalap "0.1.0"]` into the `:plugins` vector of your
 project.clj.
+
+## Documentation & Examples
+
+Please refer to our [documentation site][documentation_site].
 
 ### Transformation rules
 
@@ -42,8 +46,6 @@ In order to transform files from clojure to clojurescript you will need a `<proj
     ;; We use valid clojure syntax to annotate how we want
     ;; the clojurescript output to be.
   ]
-  ;; For more information about all the different rules you can
-  ;; specify check http://github.com/van-clj/dalap
 }
 ```
 ### Default transformation rules
@@ -129,3 +131,5 @@ before cljsbuild compilation.
 Copyright © 2012 Birdseye Software.
 
 Distributed under the MIT License.
+
+[documentation_site]:http://birdseye-sw.com/oss/lein-dalap/
