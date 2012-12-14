@@ -14,9 +14,11 @@ contrast with cljx, lein-dalap's input files are plain .clj files and
 only the .cljs files are auto-generated. It is also simpler to specify
 custom transformation rules at the project level.
 
+The name dalap is the acronym for _Decide As Late As Possible_ from lean programming.
+
 ## Documentation & Examples
 
-Please refer to our [documentation site][documentation_site].
+Please refer to our [documentation site][documentation_site]. There is also an [example application][example].
 
 ## License
 
@@ -25,3 +27,4 @@ Copyright © 2012 Birdseye Software.
 Distributed under the MIT License.
 
 [documentation_site]:http://birdseye-sw.com/oss/lein-dalap/
+[example]:http://github.com/BirdseyeSoftware/lein-dalap/tree/master/examples/hello_world
