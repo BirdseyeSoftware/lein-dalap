@@ -18,7 +18,7 @@ The name dalap is the acronym for _Decide As Late As Possible_ from lean program
 
 ## Documentation & Examples
 
-Please refer to our [documentation site][documentation_site]. There is also an [example application][example].
+Please refer to our [documentation site][documentation_site], there is also an [example application][example].
 
 ## License
 
