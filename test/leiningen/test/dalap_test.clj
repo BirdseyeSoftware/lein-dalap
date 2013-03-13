@@ -4,7 +4,8 @@
             [dalap.leiningen.configuration
              :refer [read-user-configuration]]
             [leiningen.dalap
-             :refer [dalap-compile]]))
+             :refer [dalap-compile]])
+  (:import [java.io FileNotFoundException]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -87,3 +88,9 @@
              (when (#{'ns 'is} form)
                (throw (Exception. (str "form `" form "' received"))))))]}))
       "an exception should have been thrown"))
+
+(deftest test-exception-with-msg-is-thrown-when-dalap-rules-not-found
+  (is (thrown-with-msg?
+        FileNotFoundException
+        #"In order to run lein-dalap"
+        (read-user-configuration {:dalap-rules "test/fixtures/non_existing_file.clj"}))))
