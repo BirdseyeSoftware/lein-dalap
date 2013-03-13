@@ -8,7 +8,8 @@
 
 (defn visit-clj-form [form w]
   "A modified version of clojure.walk with the ability to drop forms"
-  (letfn [(filter-map [f form] (remove #(= % :dalap/drop-form)
+  (letfn [(filter-map [f form] (remove #(or (= % :dalap/drop-form)
+                                            (nil? %))
                                        (map f form)))]
     (cond
       (list? form) (apply list (filter-map w form))
@@ -24,6 +25,7 @@
   ([forms rules]
      (dalap.walk/walk forms
                       ((dalap.rules/-gen-rules-decorator rules) visit-clj-form))))
+
 
 (defn read-forms-from-file
   ;; stolen from:
@@ -51,7 +53,7 @@
     ;; e.g:
     ;; #_(:cljs (println "hello world")) => (do (println "hello world"))
     (java.io.StringReader.
-     (str/replace (slurp input) #"\#_\(\s*:cljs\b" "(do ")))))
+     (str/replace (slurp input) #"\#_\(\s*:cljs" "(:dalap-cljs-only")))))
 
 (defn cljs-generated-file-notice [clj-file-path]
   (str ";; This file was generated with lein-dalap from\n;;\n;; "

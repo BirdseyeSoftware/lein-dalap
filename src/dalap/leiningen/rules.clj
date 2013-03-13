@@ -11,6 +11,16 @@
   (and (list? form)
        (#{'defmacro 'comment} (first form))))
 
+(defn require-macro? [form]
+  (and (seq? form)
+       (= (first form) :require)
+       ((has-meta? :cljs-macro) form)))
+
+(defn cljs-form-only? [form]
+  (and (list? form)
+       (or (= (first form) :dalap-cljs-only)
+           (= (first form) :dalap-cljs-only-splat))))
+
 ;; Transformers ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn replace-with-meta [meta-tag]
@@ -23,6 +33,14 @@
 
 (def drop-form (constantly :dalap/drop-form))
 
+(defn change-to-require-macro [form w_]
+  (concat [:require-macro] (rest form)))
+
+(defn replace-with-cljs [form w_]
+  (cond
+    (= (first form) :dalap-cljs-only) (w_ (cons 'do (rest form)))
+    (= (first form) :dalap-cljs-only-splat) (w_ (second form))
+    :else (w_ form)))
 
 ;; Constant values ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -34,6 +52,10 @@
    (dalap.rules/when (has-meta? :cljs))
    (dalap.rules/transform (replace-with-meta :cljs))
    ;;
+   ;;
+   (dalap.rules/when cljs-form-only?)
+   (dalap.rules/transform replace-with-cljs)
+   ;;
    ;; drop all forms tagged with ^{:clj} (clojure only)
    (dalap.rules/when (has-meta? :clj))
    (dalap.rules/transform drop-form)
@@ -41,6 +63,10 @@
    ;; drop forms that only work on clojure (macro & comments)
    (dalap.rules/when clj-form-only?)
    (dalap.rules/transform drop-form)
+   ;;
+   ;; ^:cljs-macro replaces :require to :require-macros
+   (dalap.rules/when require-macro?)
+   (dalap.rules/transform change-to-require-macro)
    ])
 
 (defonce -cljs-java-non-prefix-types-rules

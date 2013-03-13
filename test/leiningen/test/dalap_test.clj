@@ -13,36 +13,31 @@
   (is (fs/exists? path)
       (str "`" path "' should exists in the filesystem")))
 
-(defmacro gen-rule-file [project dalap-rules-form]
+(defmacro gen-rule-file [dalap-rules-form]
   `(do
-     (spit ~(:dalap-rules project) (pr-str '~dalap-rules-form))
+     (spit "test/fixtures/dalap_rules.clj" (pr-str '~dalap-rules-form))
      (dalap-compile
-      '~project
-      (read-user-configuration '~project)
+      {}
+      (read-user-configuration {:dalap-rules "test/fixtures/dalap_rules.clj"
+                                :dependencies []})
       false)
-     (fs/delete ~(:dalap-rules project))))
+     (fs/delete "test/fixtures/dalap_rules.clj")))
 
-(deftest reads-source-file
+(deftest test-reads-source-file
   (is (thrown? Exception
                (gen-rule-file
-                ;; project
-                {:dalap-rules "test/fixtures/dalap_rules.clj"}
                 {["test/fixtures/non_existing.clj" "test/fixtures/out.cljs"]
                  []}))))
 
-(deftest generates-destination-file
+(deftest test-generates-destination-file
   (gen-rule-file
-   ;; project
-   {:dalap-rules "test/fixtures/dalap_rules.clj"}
    {["test/fixtures/file.clj" "test/fixtures/out.cljs"]
     []})
   (assert-file-present "test/fixtures/out.cljs")
   (fs/delete "test/fixtures/file.cljs"))
 
-(deftest transformations-being-executed
+(deftest test-transformations-being-executed
   (gen-rule-file
-   ;; project
-   {:dalap-rules "test/fixtures/dalap_rules.clj"}
    {["test/fixtures/file.clj" "test/fixtures/out.cljs"]
     ['ns 'namespace]})
   (is (= (-> (slurp "test/fixtures/file.clj")
@@ -55,12 +50,36 @@
          'namespace))
   (fs/delete "test/fixtures/out.cljs"))
 
-(deftest dalap-scope-is-in-configuration-file
+
+(deftest test-cljs-macro
+  (gen-rule-file
+   {["test/fixtures/file.clj" "test/fixtures/out.cljs"]
+    []})
+  (is (= (-> (slurp "test/fixtures/file.clj")
+             read-string
+             (nth 3)
+             first)
+         :require))
+  (is (= (-> (slurp "test/fixtures/out.cljs")
+             read-string
+             (nth 3)
+             first)
+         :require-macro))
+  (fs/delete "test/fixtures/out.cljs"))
+
+(deftest test-cljs-splat-ignore-macro
+  (gen-rule-file
+   {["test/fixtures/file.clj" "test/fixtures/out.cljs"]
+    []})
+  (is (->> (slurp "test/fixtures/file.clj")
+          (re-find #":cljs-splat")))
+  (is (->> (slurp "test/fixtures/out.cljs")
+           (re-find #"\[cljs.only"))))
+
+(deftest test-dalap-scope-is-in-configuration-file
   (is (thrown?
        Exception
        (gen-rule-file
-        ;; project
-        {:dalap-rules "test/fixtures/dalap_rules.clj"}
         {["test/fixtures/file.clj" "test/fixtures/out.cljs"]
          [(dalap/when #(= (count (str %)) 2))
           (dalap/transform

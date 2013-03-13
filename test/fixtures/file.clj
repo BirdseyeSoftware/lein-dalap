@@ -1,19 +1,21 @@
 (ns fixtures.file
-  (:require [clojure.test :refer [deftest is]])
-  (:import [clojure.lang PersistentVector IFn]))
+  (:require [clojure.test :refer [deftest is]]
+            #_(:cljs-splat [cljs.only :refer [somefn]]))
+  ^:cljs-macro (:require [watchtower.core :refer [watcher]])
+  ^:clj (:import [clojure.lang PersistentVector IFn]))
 
 (defprotocol CustomProtocol
   (my-fn [this]))
 
 (defrecord CustomType []
-  IFn
+  clojure.lang.IFn
   (invoke [this] nil))
 
 (extend-protocol CustomProtocol
-  PersistentVector
+  clojure.lang.PersistentVector
   (my-fn [this] nil)
 
-  String
+  java.lang.String
   (my-fn [this] nil))
 
 (deftest hello-world
