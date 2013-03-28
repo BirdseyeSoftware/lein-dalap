@@ -14,7 +14,7 @@
   (is (fs/exists? path)
       (str "`" path "' should exists in the filesystem")))
 
-(defmacro gen-rule-file [dalap-rules-form]
+(defmacro run-transformations! [dalap-rules-form]
   `(do
      (spit "test/fixtures/dalap_rules.clj" (pr-str '~dalap-rules-form))
      (dalap-compile
@@ -26,19 +26,19 @@
 
 (deftest test-reads-source-file
   (is (thrown? Exception
-               (gen-rule-file
+               (run-transformations!
                 {["test/fixtures/non_existing.clj" "test/fixtures/out.cljs"]
                  []}))))
 
 (deftest test-generates-destination-file
-  (gen-rule-file
+  (run-transformations!
    {["test/fixtures/file.clj" "test/fixtures/out.cljs"]
     []})
   (assert-file-present "test/fixtures/out.cljs")
   (fs/delete "test/fixtures/file.cljs"))
 
 (deftest test-transformations-being-executed
-  (gen-rule-file
+  (run-transformations!
    {["test/fixtures/file.clj" "test/fixtures/out.cljs"]
     ['ns 'namespace]})
   (is (= (-> (slurp "test/fixtures/file.clj")
@@ -51,9 +51,14 @@
          'namespace))
   (fs/delete "test/fixtures/out.cljs"))
 
+(deftest test-nil-forms-are-not-dropped
+  (run-transformations!
+   {["test/fixtures/file.clj" "test/fixtures/out.cljs"]
+    []})
+  (is (re-find #" nil" (slurp "test/fixtures/out.cljs"))))
 
 (deftest test-cljs-macro
-  (gen-rule-file
+  (run-transformations!
    {["test/fixtures/file.clj" "test/fixtures/out.cljs"]
     []})
   (is (= (-> (slurp "test/fixtures/file.clj")
@@ -69,7 +74,7 @@
   (fs/delete "test/fixtures/out.cljs"))
 
 (deftest test-cljs-splat-ignore-macro
-  (gen-rule-file
+  (run-transformations!
    {["test/fixtures/file.clj" "test/fixtures/out.cljs"]
     []})
   (is (->> (slurp "test/fixtures/file.clj")
@@ -80,7 +85,7 @@
 (deftest test-dalap-scope-is-in-configuration-file
   (is (thrown?
        Exception
-       (gen-rule-file
+       (run-transformations!
         {["test/fixtures/file.clj" "test/fixtures/out.cljs"]
          [(dalap/when #(= (count (str %)) 2))
           (dalap/transform

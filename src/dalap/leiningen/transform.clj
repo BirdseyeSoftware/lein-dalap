@@ -8,8 +8,7 @@
 
 (defn visit-clj-form [form w]
   "A modified version of clojure.walk with the ability to drop forms"
-  (letfn [(filter-map [f form] (remove #(or (= % :dalap/drop-form)
-                                            (nil? %))
+  (letfn [(filter-map [f form] (remove #(= % :dalap/drop-form)
                                        (map f form)))]
     (cond
       (list? form) (apply list (filter-map w form))
