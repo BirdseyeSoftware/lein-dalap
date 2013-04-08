@@ -19,7 +19,7 @@
 (defn cljs-form-only? [form]
   (and (list? form)
        (or (= (first form) :dalap-cljs-only)
-           (= (first form) :dalap-cljs-only-splat))))
+           (= (first form) :dalap-cljs-only-do))))
 
 ;; Transformers ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -36,11 +36,11 @@
 (defn change-to-require-macro [form w_]
   (concat [:require-macro] (rest form)))
 
-(defn replace-with-cljs [form w_]
+(defn replace-with-cljs [form w]
   (cond
-    (= (first form) :dalap-cljs-only) (w_ (cons 'do (rest form)))
-    (= (first form) :dalap-cljs-only-splat) (w_ (second form))
-    :else (w_ form)))
+   (= (first form) :dalap-cljs-only) (w (second form))
+   (= (first form) :dalap-cljs-only-do) (w (conj (rest form) 'do))
+   :else (w form)))
 
 ;; Constant values ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

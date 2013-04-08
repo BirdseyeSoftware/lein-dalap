@@ -1,8 +1,12 @@
 (ns fixtures.file
   (:require [clojure.test :refer [deftest is]]
-            #_(:cljs-splat [cljs.only :refer [somefn]]))
+            #_(:cljs [cljs.only :refer [somefn]]))
   ^:cljs-macro (:require [watchtower.core :refer [watcher]])
   ^:clj (:import [clojure.lang PersistentVector IFn]))
+
+
+#_(:cljs-do
+   (.log js/console "hello world"))
 
 (defprotocol CustomProtocol
   (my-fn [this]))

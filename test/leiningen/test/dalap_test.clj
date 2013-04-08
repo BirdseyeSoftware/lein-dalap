@@ -78,9 +78,19 @@
    {["test/fixtures/file.clj" "test/fixtures/out.cljs"]
     []})
   (is (->> (slurp "test/fixtures/file.clj")
-          (re-find #":cljs-splat")))
+          (re-find #":cljs")))
   (is (->> (slurp "test/fixtures/out.cljs")
            (re-find #"\[cljs.only"))))
+
+
+(deftest test-cljs-do-ignore-macro
+  (run-transformations!
+   {["test/fixtures/file.clj" "test/fixtures/out.cljs"]
+    []})
+  (is (->> (slurp "test/fixtures/file.clj")
+          (re-find #":cljs-do")))
+  (is (->> (slurp "test/fixtures/out.cljs")
+           (re-find #"\(do \(\.log"))))
 
 (deftest test-dalap-scope-is-in-configuration-file
   (is (thrown?
