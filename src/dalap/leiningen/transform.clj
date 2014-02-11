@@ -1,9 +1,10 @@
 (ns dalap.leiningen.transform
   (:require [clojure.string :as str]
+            [clojure.pprint :as pp]
             [dalap.walk]
             [dalap.rules]
             [dalap.leiningen.rules :refer
-             [cljs-default-rules -mappend]])
+            [cljs-default-rules -mappend]])
   (:import [clojure.lang LineNumberingPushbackReader]))
 
 (defn visit-clj-form [form w]
@@ -59,10 +60,16 @@
        clj-file-path " @ " (java.util.Date.)
        "\n;;\n"))
 
-(defn transform-to-cljs-file
-  [clj-file-path rules]
+(defn pretty-print [form]
+  (with-out-str
+    (pp/write form :dispatch pp/code-dispatch)))
+
+(defn transform-to-cljs-file [clj-file-path rules]
   (str (cljs-generated-file-notice clj-file-path)
-       (str/join "\n" (clj-forms-to-cljs-forms
-                       (read-clj-forms-from-input clj-file-path)
-                       (-mappend cljs-default-rules
-                                 rules)))))
+       (str/join
+         "\n\n"
+         (map
+           pretty-print
+           (clj-forms-to-cljs-forms
+             (read-clj-forms-from-input clj-file-path)
+             (-mappend cljs-default-rules rules))))))
