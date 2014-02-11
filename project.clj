@@ -6,5 +6,5 @@
   :dependencies [[com.birdseye-sw/dalap "0.1.0"]
                  [fs "1.3.3"]
                  [watchtower "0.1.1"]
-                 [lein-cljsbuild "0.3.2"]]
+                 [lein-cljsbuild "1.0.2"]]
   :eval-in-leiningen true)
