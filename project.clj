@@ -1,4 +1,4 @@
-(defproject com.birdseye-sw/lein-dalap "0.1.1"
+(defproject com.birdseye-sw/lein-dalap "0.1.2-SNAPSHOT"
   :description "Provides clojure to clojurescript transformation using dalap"
   :url "http://birdseye-sw.com/oss/lein-dalap/"
   :license {:name "MIT"
